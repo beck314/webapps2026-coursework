@@ -1,0 +1,26 @@
+{% extends 'payapp/base.html' %}
+
+{% block content %}
+
+    <h1>Payment application homepage</h1>
+
+    <form method="POST" action="requestPayment.html" type="text">
+        <p>request a payment</p>
+        <input type="submit">
+    </form>
+
+    <br>
+
+    <form method="POST" action="sendPayment.html" type="text">
+        <p>send a payment</p>
+        <input type="submit">
+    </form>
+
+    <br>
+
+        <form method="POST" action="transactions.html" type="text">
+        <p>check your previous transactions</p>
+        <input type="submit">
+    </form>
+
+{% endblock %}
