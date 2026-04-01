@@ -1,7 +1,17 @@
+from asyncio.windows_events import NULL
+
 from django.contrib.auth.models import User
 from django.db import models
+from enum import Enum
 
-# Create your models here.
+
+class Event_Type(Enum):
+    request = 'request'
+    accepted_request = 'accepted_request'
+    rejected_request = 'rejected_request'
+    sent_payment = 'sent_payment'
+    received_payment = 'received_payment'
+
 
 class Balance(models.Model):
     name = models.ForeignKey(
@@ -35,3 +45,18 @@ class Notifications(models.Model):
         related_name='receiver'
     )
     amount_requested = models.IntegerField(default=0)
+
+
+class Transactions(models.Model):
+    name = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='individual'
+    )
+    other = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='other'
+    )
+    event_type = Event_Type
+    amount = models.IntegerField(default=NULL)

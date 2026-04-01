@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.db.models import ObjectDoesNotExist
 
 from payapp.forms import ExchangeForm
-from payapp.models import Notifications, Balance
+from payapp.models import Notifications, Balance, Transactions, Event_Type
 
 
 # Create your views here.
@@ -25,10 +25,16 @@ def makerequest(request):
                     transferRequest = Notifications(name=asking_username, username=giving_username, amount_requested=money_to_exchange)
                     transferRequest.save()
 
+                    instance = Transactions(user="asking_username", other="giving_username", event_type=Event_Type.request, amount=money_to_exchange)
+                    instance.save()
+
+                    instancesr = Notifications(name=giving_username, user_requesting=asking_username, amount_requested=money_to_exchange)
+                    instancesr.save()
+
                 return render(request, "payapp/home.html", {'info':"The user will be notified of your request"})
 
             except (DatabaseError, ObjectDoesNotExist) as e:
-                return render(request, "payapp/home.html", {'info': "An error occured while processing the form, the recipient of the request may not exist"})
+                return render(request, "payapp/home.html", {'info': "An error occured while processing your request, the recipient of the request may not exist"})
         else:
             return render(request, "payapp/home.html", {"info": "Your form was invalid, please check your input"})
 
@@ -45,30 +51,35 @@ def sendpayment(request):
                 dst_username = form.cleaned_data["enter_destination_username"]
                 money_to_transfer = form.cleaned_data["enter_points_to_transfer"]
 
-                src_points = models.Balance.objects.select_for_update().get(name__username=src_username)
-                dst_points = models.Balance.objects.select_for_update().get(name__username=dst_username)
+                src_balance = Balance.objects.select_for_update().get(name__username=src_username)
+                dst_balance = Balance.objects.select_for_update().get(name__username=dst_username)
 
                 with transaction.atomic():
-                    src_points.points = src_points.points - money_to_transfer
-                    src_points.save()
+                    src_balance.money = src_balance.money - money_to_transfer
+                    src_balance.save()
 
-                    dst_points.points = dst_points.points + money_to_transfer
-                    dst_points.save()
+                    dst_balance.money = dst_balance.money + money_to_transfer
+                    dst_balance.save()
 
-                return render(request, "transactions/points.html", {"src_points": src_points, "dst_points": dst_points})
+                    instance = Transactions(name=src_username, other=dst_username, event_type=Event_Type.sent_payment, amount=money_to_transfer)
+                    instance.save()
+
+                return render(request, "payapp/home.html", {"src_points": src_balance, "dst_points": dst_balance})
             except (DatabaseError, ObjectDoesNotExist) as e:
-                return render(request, "transactions/pointstransfer.html", {"form": form, "Error": e})
+                return render(request, "payapp/sendPayment.html", {"form": form, "Error": e})
     else:
         return render(request, "payapp/sendPayment.html", {"form": ExchangeForm()})
 
 def transactions(request):#
-    if request.method == "GET":
-        return render(request, "payapp/transactions.html")
+    if request.method == "POST":
+        transaction_list = Transactions.objects.all()
+        return render(request, "payapp/transactions.html", {"transactions": transaction_list})
     return
 
 def notifications(request):
     if request.method == "GET":
-        return render(request, "payapp/notifications.html")
+        request_list = Notifications.objects.all()
+        return render(request, "payapp/notifications.html", {"notifications": request_list})
     return
 
 def payapp(request):
