@@ -27,9 +27,11 @@ class Notifications(models.Model):
     name = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+        related_name='sender'
     )
     user_requesting = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+        related_name='receiver'
     )
     amount_requested = models.IntegerField(default=0)

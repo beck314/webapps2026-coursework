@@ -4,32 +4,16 @@
 
     <h1>Payment application homepage</h1>
 
+
     <form method="POST" type="text">
-        <p>request a payment</p>
-        <label><input name="type" hidden value="makerequest"></label>
+        <p>choose an option</p>
+        <input type="radio" id="request" name="next_page" value="request payment">
+        <input type="radio" id="send" name="next_page" value="send a payment">
+        <input type="radio" id="transactions" name="next_page" value="view past transactions">
+        <input type="radio" id="notifications" name="next_page" value="view notifications">
         <input type="submit">
     </form>
 
-    <br>
 
-    <form method="POST" type="text">
-        <p>send a payment</p>
-        <label><input name="type" hidden value="sendpayment"></label>
-        <input type="submit">
-    </form>
-
-    <br>
-
-    <form method="POST" type="text">
-        <p>check your previous transactions</p>
-        <label><input name="type" hidden value="transactions"></label>
-        <input type="submit">
-    </form>
-
-    <form method="POST" type="text">
-        <p>check your notifications</p>
-        <label><input name="type" hidden value="notifications"></label>
-        <input type="submit">
-    </form>
 
 {% endblock %}
