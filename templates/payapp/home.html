@@ -4,22 +4,31 @@
 
     <h1>Payment application homepage</h1>
 
-    <form method="POST" action="requestPayment.html" type="text">
+    <form method="POST" type="text">
         <p>request a payment</p>
+        <label><input name="type" hidden value="makerequest"></label>
         <input type="submit">
     </form>
 
     <br>
 
-    <form method="POST" action="sendPayment.html" type="text">
+    <form method="POST" type="text">
         <p>send a payment</p>
+        <label><input name="type" hidden value="sendpayment"></label>
         <input type="submit">
     </form>
 
     <br>
 
-        <form method="POST" action="transactions.html" type="text">
+    <form method="POST" type="text">
         <p>check your previous transactions</p>
+        <label><input name="type" hidden value="transactions"></label>
+        <input type="submit">
+    </form>
+
+    <form method="POST" type="text">
+        <p>check your notifications</p>
+        <label><input name="type" hidden value="notifications"></label>
         <input type="submit">
     </form>
 

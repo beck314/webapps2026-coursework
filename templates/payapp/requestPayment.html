@@ -1,1 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
 {% extends 'payapp/base.html' %}
+
+{% block title %}
+    Request money from a User
+{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h3>make a request</h3>
+    {{ form | crispy }}
+{% endblock %}
