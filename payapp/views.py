@@ -95,8 +95,6 @@ def notifications(request):
 @csrf_protect
 def payapp(request):
     if request.method == 'POST':
-        print("post")
-        print(request.POST.get("pick_page"))
         if request.POST.get("pick_page") == "request payment":
             return render(request, "payapp/requestPayment.html", {"form": ExchangeForm()})
         elif request.POST.get("pick_page") == "send a payment":
@@ -109,5 +107,4 @@ def payapp(request):
             return render(request, "payapp/home.html", {"info": "select a page option please"})
 
     else:
-        print("get")
         return render(request, "payapp/home.html", {"info": "Welcome to my payment app"})
