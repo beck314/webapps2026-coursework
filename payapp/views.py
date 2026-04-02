@@ -3,13 +3,14 @@ from _pyrepl.commands import home
 from django.db import transaction, DatabaseError, models
 from django.shortcuts import render
 from django.db.models import ObjectDoesNotExist
+from django.views.decorators.csrf import csrf_protect
 
 from payapp.forms import ExchangeForm
 from payapp.models import Notifications, Balance, Transactions, Event_Type
 
 
 # Create your views here.
-
+@csrf_protect
 def makerequest(request):
     if request.method == "POST":
         ##check validity of the form and then send the request to another users account
@@ -41,6 +42,7 @@ def makerequest(request):
     else :
         return render(request, "payapp/requestPayment.html", {"form": ExchangeForm()})
 
+@csrf_protect
 def sendpayment(request):
     if request.method == "POST":
         ##just send money straight away
@@ -70,30 +72,42 @@ def sendpayment(request):
     else:
         return render(request, "payapp/sendPayment.html", {"form": ExchangeForm()})
 
+@csrf_protect
 def transactions(request):#
     if request.method == "POST":
-        transaction_list = Transactions.objects.all()
+        username = None
+        if request.user.is_authenticated:
+            username = request.user.username
+        transaction_list = Transactions.objects.filter(user=username)
         return render(request, "payapp/transactions.html", {"transactions": transaction_list})
-    return
+    return render(request, "payapp/transactions.html", {"info": "No transactions to show"})
 
+@csrf_protect
 def notifications(request):
     if request.method == "GET":
-        request_list = Notifications.objects.all()
+        username = None
+        if request.user.is_authenticated:
+            username = request.user.username
+        request_list = Notifications.objects.filter(user=username)
         return render(request, "payapp/notifications.html", {"notifications": request_list})
-    return
+    return render(request, "payapp/notifications.html", {"info": "No notifications to show"})
 
+@csrf_protect
 def payapp(request):
     if request.method == 'POST':
-        if request.POST.get("next_page") == "request":
+        print("post")
+        print(request.POST.get("pick_page"))
+        if request.POST.get("pick_page") == "request payment":
             return render(request, "payapp/requestPayment.html", {"form": ExchangeForm()})
-        elif request.POST.get("next_page") == "send":
+        elif request.POST.get("pick_page") == "send a payment":
             return render(request, "payapp/sendPayment.html", {"form": ExchangeForm()})
-        elif request.POST.get("next_page") == "transactions":
+        elif request.POST.get("pick_page") == "view past transactions":
             return render(request, "payapp/transactions.html")
-        elif request.POST.get("next_page") == "notifications":
+        elif request.POST.get("pick_page") == "view notifications":
             return render(request, "payapp/notifications.html")
         else:
             return render(request, "payapp/home.html", {"info": "select a page option please"})
 
     else:
-        return render(request, "payapp/home.html")
+        print("get")
+        return render(request, "payapp/home.html", {"info": "Welcome to my payment app"})

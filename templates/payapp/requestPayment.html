@@ -17,5 +17,6 @@
 
 {% block content %}
     <h3>make a request</h3>
+    {% csrf_token %}
     {{ form | crispy }}
 {% endblock %}

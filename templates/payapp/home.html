@@ -4,13 +4,15 @@
 
     <h1>Payment application homepage</h1>
 
+    {{ info }}
 
     <form method="POST" type="text">
+        {% csrf_token %}
         <p>choose an option</p>
-        <input type="radio" id="request" name="next_page" value="request payment">
-        <input type="radio" id="send" name="next_page" value="send a payment">
-        <input type="radio" id="transactions" name="next_page" value="view past transactions">
-        <input type="radio" id="notifications" name="next_page" value="view notifications">
+        <label for="request">request payment</label><input type="radio" id="request" name="pick_page" value="request payment">
+        <label for="send">send payment</label><input type="radio" id="send" name="pick_page" value="send a payment">
+        <label for="transactions">view transactions</label><input type="radio" id="transactions" name="pick_page" value="view past transactions">
+        <label for="notifications">view notifications</label><input type="radio" id="notifications" name="pick_page" value="view notifications">
         <input type="submit">
     </form>
 
