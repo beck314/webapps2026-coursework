@@ -39,6 +39,7 @@
 
 {% block content %}
     <form method="POST" action="/commentstore/login/">
+        {% csrf_token %}
         {{ login_form }}
         <input type="submit" value="login">
     </form>

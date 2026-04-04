@@ -1,11 +1,14 @@
 from django.contrib import admin
 from django.urls import path, include
-from payapp import views
+from payapp import views as payapp_views
+from register import views as register_views
+
 
 urlpatterns = [
-    path('requestpayement/', views.makerequest),
-    path('makepayement/', views.sendpayment),
-    path('transactions/', views.transactions),
-    path('notifications/', views.notifications),
-    path('', views.payapp),
+    path('login/', register_views.login_user),
+    path('requestpayement/', payapp_views.makerequest),
+    path('makepayement/', payapp_views.sendpayment),
+    path('transactions/', payapp_views.transactions),
+    path('notifications/', payapp_views.notifications),
+    path('', payapp_views.payapp),
 ]

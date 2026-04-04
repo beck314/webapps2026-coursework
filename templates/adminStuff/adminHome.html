@@ -1,4 +1,14 @@
 {% extends "adminStuff/adminBase.html" %}
 
 
+{% block content %}
+    <div class="column">
+        {{ allUsers }}
+    </div>
 
+    <div class="column">
+        {{ allTransactions}}
+    </div>
+
+    <p> if you would like to add a new admin user click <a href="addAdmin.html">here</a>. Be careful who you add :)</p>
+{% endblock%}

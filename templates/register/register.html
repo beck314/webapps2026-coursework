@@ -41,7 +41,11 @@
 {% block content %}
     <h4> enter your details: </h4>
     <form method="post" action="/commentstore/register/">
-        {{ form }}
+        {% csrf_token %}
+        {{ reg_form }}
+
+        {% csrf_token %}
+        {{ info_form }}
         <input type="submit" value="submit">
     </form>
 {% endblock %}
