@@ -14,9 +14,6 @@
                     <a class="nav-link" href="/home">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/commentstore">Add Comment</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="/logout">Logout</a>
                 </li>
                 <li class="nav-item">
@@ -40,7 +37,7 @@
 
 {% block content %}
     <h4> enter your details: </h4>
-    <form method="post" action="/commentstore/register/">
+    <form method="post">
         {% csrf_token %}
         {{ reg_form }}
 
@@ -48,5 +45,7 @@
         {{ info_form }}
         <input type="submit" value="submit">
     </form>
+
+    {{ success }}
 {% endblock %}
 

@@ -5,10 +5,10 @@ from register import views as register_views
 
 
 urlpatterns = [
-    path('login/', register_views.login_user),
     path('requestpayement/', payapp_views.makerequest),
     path('makepayement/', payapp_views.sendpayment),
     path('transactions/', payapp_views.transactions),
     path('notifications/', payapp_views.notifications),
-    path('', payapp_views.payapp),
+    path('register/', register_views.register_user),
+    path('', register_views.login_user),
 ]

@@ -1,4 +1,5 @@
-from django.db import transaction
+from django.db import transaction, DatabaseError
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 
 # Create your views here.
@@ -14,6 +15,10 @@ from payapp.models import Balance
 from register.forms import RegisterForm, InfoForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
+
+from register.models import User_Info
+
+
 # Create your views here.
 
 @csrf_protect
@@ -23,13 +28,14 @@ def register_user(request):
     elif request.method == "POST":
         reg_form = RegisterForm(request.POST)
         info_form = InfoForm(request.POST)
-        print(form.is_bound)
-        if reg_form.is_valid() and info_form.is_valid() and form.cleaned_data['password1'] == form.cleaned_data['password2']:
+        print(reg_form.is_bound)
+        if reg_form.is_valid() and info_form.is_valid() and reg_form.cleaned_data['password1'] == reg_form.cleaned_data['password2']:
             try:
                 with transaction.atomic():
                     ##add user to database as well
-                    user.save()
-                    balance = Balance(name=user)
+                    user = reg_form.save()
+
+                    balance = Balance(user=user)
                     balance.save()
 
                     info_user = user.profile_name
@@ -39,27 +45,27 @@ def register_user(request):
                     info_user.save()
 
                     return render(request, 'payapp/home.html', {'success': True})
-            except any as e:
+            except (DatabaseError, ObjectDoesNotExist) as e:
                 print("error")
                 print(e)
 
         else:
-            return render(request, 'payapp/home.html', {'success':False})
+            return render(request, 'register/register.html', {'success':False})
     else:
         return HttpResponseRedirect('/errormsg/')
 
 @csrf_protect
 def login_user(request):
     if request.method == 'GET':
-        return render(request, 'register/login.html', {'login_form': AuthenticationForm})
+        return render(request, 'register/login.html', {'login_form': AuthenticationForm()})
     elif request.method == "POST":
-        form = AuthenticationForm(reauest, request.POST)
+        form = AuthenticationForm(request, request.POST)
         if form.is_valid():
-            auth = authenticate(username=form.cleaned_data.get('username', password=form.cleaned_data.get('password')))
+            auth = authenticate(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password'))
 
             if auth:
                 login(request, auth)
-                isAdmin = AdminUsers.objects.filter(user=form.cleaned_data.get('username'))
+                isAdmin = AdminUsers.objects.filter(user=auth)
                 print("authentic")
                 if not isAdmin.exists():
                     return render(request, 'payapp/home.html', {'success': True, 'user': auth})
@@ -69,10 +75,10 @@ def login_user(request):
             else:
                 ##idk if i need to limit the number of tries but this is where it would be
                 print("user login combo does not exist")
-                return render(request, 'register/login.html', {'success':"User account not valid please try again", 'form': form})
+                return render(request, 'register/login.html', {'success':"User account not valid please try again", 'login_form': AuthenticationForm()})
         else:
             print("form invalid")
-            return render(request, 'payapp/home.html', {'success':"request not valid"})
+            return render(request, 'register/login.html', {'success':"request not valid", "login_form":AuthenticationForm()})
     else:
         print("howve you got here, not a GET or POST request")
 

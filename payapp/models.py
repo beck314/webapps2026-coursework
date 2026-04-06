@@ -14,7 +14,7 @@ class Event_Type(Enum):
 
 
 class Balance(models.Model):
-    name = models.ForeignKey(
+    user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='money',

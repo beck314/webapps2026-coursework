@@ -6,14 +6,14 @@ from register.models import User_Info
 
 
 class RegisterForm(UserCreationForm):
-    user = forms.CharField(required=True)
+    username = forms.CharField(required=True)
     email = forms.EmailField(required=True)
     password1 = forms.CharField(required=True)
     password2 = forms.CharField(required=True)
 
     class Meta:
       model = User
-      fields = ["user", "email", "password1", "password2"]
+      fields = ["username", "email", "password1", "password2"]
 
 
 class InfoForm(forms.ModelForm):
