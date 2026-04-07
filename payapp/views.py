@@ -95,7 +95,7 @@ def notifications(request):
         user = None
         if request.user.is_authenticated:
             user = request.user
-            request_list = Notifications.objects.filter(name=user)
+            request_list = Notifications.objects.filter(user_receiving_notif=user)
             return render(request, "payapp/notifications.html", {"notifications": request_list})
         else:
             return render(request, "register/login.html", {"info": "user not authenticated"})
