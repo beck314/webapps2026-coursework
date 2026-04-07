@@ -5,12 +5,13 @@ from django.db import models
 from enum import Enum
 
 
-class Event_Type(Enum):
-    request = 'request'
-    accepted_request = 'accepted_request'
-    rejected_request = 'rejected_request'
-    sent_payment = 'sent_payment'
-    received_payment = 'received_payment'
+Event_Type = (
+    ('_r', 'request'),
+    ('ar', 'accepted request'),
+    ('rr', 'rejected_request'),
+    ('sp', 'sent_payment'),
+    ('rp', 'received_payment')
+)
 
 
 class Balance(models.Model):
@@ -34,12 +35,12 @@ class Exchange(models.Model):
 
 
 class Notifications(models.Model):
-    name = models.ForeignKey(
+    user_sending_notif = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='sender'
     )
-    user_requesting = models.ForeignKey(
+    user_receiving_notif = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='receiver'
@@ -48,15 +49,15 @@ class Notifications(models.Model):
 
 
 class Transactions(models.Model):
-    name = models.ForeignKey(
+    user_sending_transaction = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='individual'
     )
-    other = models.ForeignKey(
+    user_receiving_transaction = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='other'
     )
-    event_type = Event_Type
+    event_type = models.CharField(max_length=2, choices=Event_Type, default='')
     amount = models.IntegerField(default=NULL)

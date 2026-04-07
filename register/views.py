@@ -65,10 +65,11 @@ def login_user(request):
 
             if auth:
                 login(request, auth)
+                balance = Balance.objects.get(user=auth)
                 isAdmin = AdminUsers.objects.filter(user=auth)
                 print("authentic")
                 if not isAdmin.exists():
-                    return render(request, 'payapp/home.html', {'success': True, 'user': auth})
+                    return render(request, 'payapp/home.html', {'success': True, 'user': auth, 'src_balance': balance.money})
                 elif isAdmin.exists():
                     return render (request, 'adminStuff/adminHome.html', {'success': True})
 
@@ -86,6 +87,6 @@ def login_user(request):
 def logout_user(request):
     if request.method == 'GET':
         django.contrib.auth.logout(request)
-        return render(request, 'register/login.html', {'success':"successfully logged out"})
+        return render(request, 'register/logout.html', {'success':"successfully logged out"})
     else:
-        return render(request, 'register/login.html', {'success':"how did you get here?"})
+        return render(request, 'register/logout.html', {'success':"how did you get here?"})

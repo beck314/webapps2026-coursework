@@ -1,6 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load crispy_forms_tags %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">WebApps</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="False" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            {% if user.is_authenticated %}
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/payapp/home/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/payapp/notifications/">Notifications</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/payapp/transactions">Transactions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/payapp/makepayment/">Pay someone</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/payapp/requestpayment/">Request Money</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/payapp/logout">Logout</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Welcome, {{user.username}}</a>
+                </li>
+
+            {% else %}
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/payapp/login">Login</a>
+                </li>
+
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
